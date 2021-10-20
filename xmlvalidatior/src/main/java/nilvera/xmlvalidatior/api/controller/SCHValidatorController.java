@@ -13,16 +13,16 @@ import nilvera.xmlvalidatior.business.concretes.SCHValidatiorManager;
 @RequestMapping("/api/schvalidatior/")
 public class SCHValidatorController {
 	
-	private SCHValidatiorManager _SCHValidatorManager;
+	private SCHValidatiorManager _sCHValidatorManager;
 	@Autowired
-	public SCHValidatorController(SCHValidatiorManager SCHValidatorManager)
+	public SCHValidatorController(SCHValidatiorManager sCHValidatorManager)
 	{
-		this._SCHValidatorManager = SCHValidatorManager;
+		this._sCHValidatorManager = sCHValidatorManager;
 	}
 		
 	@RequestMapping(value = "schematron", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String ValidationXmlWithFile(MultipartFile file)
 	{
-		return this._SCHValidatorManager.SchValidatior(file);
+		return this._sCHValidatorManager.SchValidatior(file);
 	}
 }
