@@ -2,9 +2,9 @@ package nilvera.xmlvalidatior.entity;
 
 public class TransformType {
 		
-	private serdar Type;
+	private EnumTypeModel Type;
 		
-	public serdar getType() 
+	public EnumTypeModel getType() 
 	{
 		return this.Type;
 	}

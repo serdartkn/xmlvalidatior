@@ -17,30 +17,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
+import nilvera.xmlvalidatior.entity.EnumTypeModel;
 import nilvera.xmlvalidatior.entity.TransformType;
 
 @Service
 public class XSDValidatiorManager 
 {
-	public boolean deneme(String type) 
-	{
-		HashMap<String, String> linkler = new HashMap<String, String>();
-		linkler.put("INVOICE", "\\UBL-Invoice-2.1.xsd");
-		linkler.put("ARCHIVE_INVOICE", "C:\\UBL-Invoice-2.1.xsd");
-		linkler.put("DESPATCH_ADVICE", "C:\\UBL-DespatchAdvice-2.1.xsd");
-		linkler.put("RECEIPT_ADVICE", "C:\\UBL-ReceiptAdvice-2.1.xsd");
-		System.out.println(type);
-		return true;
-	}
 		
-	public boolean XsdValidator1(MultipartFile file, String Type) 
+	public boolean XsdValidator1(MultipartFile file, EnumTypeModel type) 
 	{
 		HashMap<String, String> linkler = new HashMap<String, String>();
-		linkler.put("INVOICE", "\\UBL-Invoice-2.1.xsd");
-		linkler.put("ARCHIVE_INVOICE", "C:\\UBL-Invoice-2.1.xsd");
-		linkler.put("DESPATCH_ADVICE", "C:\\UBL-DespatchAdvice-2.1.xsd");
-		linkler.put("RECEIPT_ADVICE", "C:\\UBL-ReceiptAdvice-2.1.xsd");
-		System.out.println(linkler.get(Type));
+		linkler.put("INVOICE", "C:\\Users\\Nilvera\\git\\repository\\xmlvalidatior\\src\\main\\java\\nilvera\\xmlvalidatior\\business\\utilities\\UBL-Invoice-2.1.xsd");
+		linkler.put("ARCHIVE_INVOICE", "\\UBL-Invoice-2.1.xsd");
+		linkler.put("DESPATCH_ADVICE", "\\UBL-DespatchAdvice-2.1.xsd");
+		linkler.put("RECEIPT_ADVICE", "\\UBL-ReceiptAdvice-2.1.xsd");
+		System.out.println(linkler.get(type.name()));
 		try
 		{			
 			File doc = new File("\\" + file.getOriginalFilename());
@@ -50,16 +41,15 @@ public class XSDValidatiorManager
     		outputStream.write(file.getBytes());
     		outputStream.close();
     		
-			FileInputStream xmlFile = new FileInputStream(new File("\\" + file.getOriginalFilename()));
-			Source xmlSource = new StreamSource(xmlFile);
+//			FileInputStream xmlFile = new FileInputStream(new File("\\" + file.getOriginalFilename()));
+//			Source xmlSource = new StreamSource(xmlFile);
     		
     		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 //			Schema schema1 = factory.newSchema(new File("etc\\UBL-Invoice-2.1.xsd"));
-//    		Schema schema1 = factory.newSchema(new File(linkler.get("INVOICE")));
-    		Schema schema1 = factory.newSchema(new File("C:\\UBL-Invoice-2.1.xsd"));
+    		Schema schema1 = factory.newSchema(new File(linkler.get(type.name())));
 	
     		Validator validator1 = schema1.newValidator();
-            validator1.validate(new StreamSource(new File("C:\\MONDI MOBILYA SAN.TIC.A.S-VMF2021000003278.xml")));
+            validator1.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
     		
 		}
 		catch (IOException | SAXException e)
@@ -67,13 +57,11 @@ public class XSDValidatiorManager
 			e.printStackTrace();
 			System.out.println(e.fillInStackTrace());
 			return false;
-			
 		}
 		return true;
-		
 	}
 	
-	public boolean XsdValidator2(MultipartFile file, String type) 
+	public boolean XsdValidator2(MultipartFile file, EnumTypeModel type) 
 	{	
 		try
 		{
@@ -83,23 +71,17 @@ public class XSDValidatiorManager
 			FileOutputStream outputStream = new FileOutputStream(new File("\\" + file.getOriginalFilename()));
 			outputStream.write(file.getBytes());
 			outputStream.close();
+						
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			
-			FileInputStream xmlFile = new FileInputStream(new File("\\" + file.getOriginalFilename()));
-			Source xmlSource = new StreamSource(xmlFile);
-			
-			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-			
-
-			switch (type)
+			switch (type.name())
 			{
 			case "INVOICE":
-	
 	//			Schema schema1 = factory.newSchema(new File("etc\\UBL-Invoice-2.1.xsd"));
-				Schema schema1 = factory.newSchema(new File("\\UBL-Invoi465ce-2.1.xsd"));
+				Schema schema1 = factory.newSchema(new File("C:\\Users\\Nilvera\\git\\repository\\xmlvalidatior\\src\\main\\java\\nilvera\\xmlvalidatior\\business\\utilities\\UBL-Invoice-2.1.xsd"));
 				
 		   		Validator validator1 = schema1.newValidator();
-	            validator1.validate(xmlSource);
-	
+		   		validator1.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
 		    	break;
 			case "ARCHIVE_INVOICE":				
 	//			Schema schema2 = factory.newSchema(new File("etc\\UBL-Invoice-2.1.xsd"));
@@ -128,7 +110,9 @@ public class XSDValidatiorManager
 		} 
 		catch (Exception e) 
 		{
-			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(e.fillInStackTrace());
+			return false;
 		}
 		return true;		
 	}	

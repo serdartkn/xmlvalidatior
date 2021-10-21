@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import nilvera.xmlvalidatior.business.concretes.XSDValidatiorManager;
-import nilvera.xmlvalidatior.entity.TransformType;
-import nilvera.xmlvalidatior.entity.serdar;
+import nilvera.xmlvalidatior.entity.EnumTypeModel;
 
 @RestController
 @RequestMapping("/api/xsdvalidatior/")
@@ -21,22 +20,15 @@ public class XSDValidatorController {
 		this._xSDValidatiorManager = xSDValidatiorManager;
 	}
 	
-	@RequestMapping(value = "xsd1", method = RequestMethod.POST)
-	public boolean ValidationXml1(MultipartFile file, TransformType type)
+	@RequestMapping(value = "xsd", method = RequestMethod.POST)
+	public boolean XsdValidator1(MultipartFile file, EnumTypeModel type)
 	{
-		return this._xSDValidatiorManager.XsdValidator1(file, type.toString());
+		return this._xSDValidatiorManager.XsdValidator1(file, type);
 	}
 	
 	@RequestMapping(value = "xsd2", method = RequestMethod.POST)
-	public boolean ValidationXml2(MultipartFile file, TransformType type)
+	public boolean XsdValidator2(MultipartFile file, EnumTypeModel type)
 	{
-		return this._xSDValidatiorManager.XsdValidator2(file, type.toString());
+		return this._xSDValidatiorManager.XsdValidator2(file, type);
 	}
-	
-	@RequestMapping(value = "xsd3", method = RequestMethod.GET)
-	public boolean ValidationXml3(serdar type)
-	{
-		return this._xSDValidatiorManager.deneme(type.name());
-	}
-	
 }
