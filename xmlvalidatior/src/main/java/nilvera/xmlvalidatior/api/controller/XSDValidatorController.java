@@ -31,4 +31,10 @@ public class XSDValidatorController {
 	{
 		return this._xSDValidatiorManager.XsdValidator2(file, type);
 	}
+	
+	@RequestMapping(value = "xsd3", method = RequestMethod.POST)
+	public boolean XsdValidator3(String file, String type)
+	{
+		return this._xSDValidatiorManager.xsdValidator3(file, type);
+	}
 }
