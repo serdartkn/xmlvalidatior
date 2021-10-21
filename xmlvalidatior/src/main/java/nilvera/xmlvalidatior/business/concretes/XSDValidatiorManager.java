@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -18,7 +19,11 @@ import javax.xml.validation.Validator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 
 import nilvera.xmlvalidatior.entity.EnumTypeModel;
 import nilvera.xmlvalidatior.entity.TransformType;
@@ -91,53 +96,70 @@ public class XSDValidatiorManager
 		{
 			File doc = new File("\\" + file.getOriginalFilename());
 			doc.createNewFile();
-				
+	
 			FileOutputStream outputStream = new FileOutputStream(new File("\\" + file.getOriginalFilename()));
 			outputStream.write(file.getBytes());
 			outputStream.close();
-						
+	
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			
+			String filePath = "";
+
 			switch (type.name())
 			{
+			
 			case "INVOICE":
-	//			Schema schema1 = factory.newSchema(new File("etc\\UBL-Invoice-2.1.xsd"));
-				Schema schema1 = factory.newSchema(new File("C:\\\\Users\\\\Nilvera\\\\Desktop\\\\UBL-TR1.2.1_Paketi\\\\UBLTR_1.2.1_Paketi\\\\xsdrt\\\\maindoc\\\\UBL-Invoice-2.1.xsd"));
-				
-		   		Validator validator1 = schema1.newValidator();
-		   		validator1.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
-		    	break;
-			case "ARCHIVE_INVOICE":				
-	//			Schema schema2 = factory.newSchema(new File("etc\\UBL-Invoice-2.1.xsd"));
-				Schema schema2 = factory.newSchema(new File("./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-Invoice-2.1.xsd"));
-				 
-	    		Validator validator2 = schema2.newValidator();
-	            validator2.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
+				filePath = "C:\\Users\\Nilvera\\Desktop\\UBL-TR1.2.1_Paketi\\UBLTR_1.2.1_Paketi\\xsdrt\\maindoc\\UBL-Invoice-2.1.xsd";
+			    break;
+			case "ARCHIVE_INVOICE":
+				filePath = "./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-Invoice-2.1.xsd" ;
 				break;
-			case "DESPATCH_ADVICE":				
-	//			Schema schema3 = factory.newSchema(new File("etc\\UBL-DespatchAdvice-2.1.xsd"));
-				Schema schema3 = factory.newSchema(new File("./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-DespatchAdvice-2.1.xsd"));
-					    		
-	    		Validator validator3 = schema3.newValidator();
-	            validator3.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
+			case "DESPATCH_ADVICE":
+				filePath = "./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-DespatchAdvice-2.1.xsd" ;    
 				break;
-			case "RECEIPT_ADVICE":				
-	//			Schema schema4 = factory.newSchema(new File("etc\\UBL-ReceiptAdvice-2.1.xsd"));
-				Schema schema4 = factory.newSchema(new File("./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-ReceiptAdvice-2.1.xsd"));
-	    		
-	    		Validator validator4 = schema4.newValidator();
-	            validator4.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
+			case "RECEIPT_ADVICE":
+				filePath = "./src/main/java/nilvera/xmlvalidatior/business/utilities/UBL-ReceiptAdvice-2.1.xsd" ;
 				break;
 			default:
 				break;
-			}		
-		} 
-		catch (Exception e) 
+			}
+	
+			Schema schema = factory.newSchema(new File(filePath));
+			Validator validator = schema.newValidator();
+			validator.setErrorHandler(new MyErrorHandler());
+			validator.validate(new StreamSource(new File("\\" + file.getOriginalFilename())));
+			
+			doc.delete();
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
-			System.out.println(e.fillInStackTrace());
-			return false;
+			
 		}
-		return true;		
+		return true;
+		
 	}	
+	
+	private static class MyErrorHandler implements ErrorHandler 
+	{
+		public void warning(SAXParseException e) throws SAXException 
+		{
+	        printException(e);
+	    }
+		 
+	    public void error(SAXParseException e) throws SAXException 
+	    { 
+	        printException(e);
+	    }
+	     
+	    public void fatalError(SAXParseException e) throws SAXException 
+	    {
+	        printException(e);
+	    }
+	     
+	    private String[] printException(SAXParseException e) 
+	    {
+	    	String[] cars = {"Line Number: " + e.getLineNumber(),  "Column Number: " + e.getColumnNumber(), "Message: " +e.getMessage()};
+	    	return cars;
+	    }
+	}
 }
