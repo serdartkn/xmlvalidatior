@@ -2,10 +2,16 @@ package nilvera.xmlvalidatior.entity;
 
 public class TransformType {
 		
-	private EnumTypeModel Type;
+	private TypeModel type;
+	private ValidateModel validate; 
 		
-	public EnumTypeModel getType() 
+	public TypeModel getType() 
 	{
-		return this.Type;
+		return this.type;
+	}
+	
+	public ValidateModel getValidate() 
+	{
+		return this.validate;
 	}
 }
