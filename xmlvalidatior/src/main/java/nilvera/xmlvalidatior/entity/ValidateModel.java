@@ -1,7 +1,5 @@
 package nilvera.xmlvalidatior.entity;
 
-public enum ValidateModel
-{
-	SCHEMATRON,
-	SCHEMA;
+public enum ValidateModel {
+	SCHEMATRON, SCHEMA;
 }

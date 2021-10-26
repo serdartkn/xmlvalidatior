@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+   xmlvalidation:
+    container_name: xmlvalidation
+    image: xmlvalidation_image
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - "TZ=Europe/Istanbul"
+      - LANG=C.UTF-8
+    ports:
+      - "8181:8181"
